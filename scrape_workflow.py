@@ -12,9 +12,12 @@ if __name__ == "__main__":
     if len(papers_metadata_list) > 0:
         all_paper_details = []
         for paper_metadata in tqdm.tqdm(papers_metadata_list, desc = "Extracting info from paper using genai..."):
-            full_paper_details = get_genai_analysis_json(paper_metadata) 
-            all_paper_details.append(full_paper_details)
-            time.sleep(8+ 3 * random.random())
+            genai_analysis_status, full_paper_details = get_genai_analysis_json(paper_metadata) 
+            if genai_analysis_status:
+                all_paper_details.append(full_paper_details)
+                time.sleep(8 + 3*random.random())
+            else:
+                time.sleep(10 + 5*random.random())
 
         scraped_df = pd.DataFrame(all_paper_details)
         save_status = save_to_gbq(scraped_df)

@@ -75,7 +75,7 @@ def pdf_to_base64(file_path):
         print(f"Error opening or reading file: {e}")
         return None
     
-@retry(tries=3, delay=5)
+@retry(tries=3, delay=15)
 def get_model_response(pdf_base64, prompt = PROMPT, api_key = API_KEY):
 
     response = litellm.completion(
@@ -102,30 +102,36 @@ def get_model_response(pdf_base64, prompt = PROMPT, api_key = API_KEY):
 def get_genai_analysis_json(input_json):
     if "arXiv Page" not in input_json["links"]:
         return False, {}
-
-    download_status, download_path = download_pdf_simple(input_json['links']['arXiv Page'])
+    
+    try:
+        download_status, download_path = download_pdf_simple(input_json['links']['arXiv Page'])
+    except:
+        print("Failed to download PDF")
+        return False, {}
+    
     if not download_status:
         return False, {}
 
     try:
         pdf_base64 = pdf_to_base64(download_path)
         response_json = get_model_response(pdf_base64)
+
+        output_json = input_json
+        response_values = list(response_json.values())
+        output_json['summary'] = response_values[0]
+        output_json['keyPoints'] = response_values[1]
+        output_json['impact'] = response_values[2]
+        output_json['tags'] = response_values[3]
     except Exception as e:
         print(f"Failed to get model response: {e}")
         return False, {}
+    
     try:
         file_path = Path(download_path)
         file_path.unlink(missing_ok=True)
     except:
         print("Failed to delete temp file")
         return False, {}
-
-    output_json = input_json
-    response_values = list(response_json.values())
-    output_json['summary'] = response_values[0]
-    output_json['keyPoints'] = response_values[1]
-    output_json['impact'] = response_values[2]
-    output_json['tags'] = response_values[3]
 
     try:
         desired_order_list = ['id', 'title', 'authors', 'abstract', 'summary', 'keyPoints', 'impact', 'links', 'date', 'upvotes', 'tags']
@@ -135,5 +141,5 @@ def get_genai_analysis_json(input_json):
         print(f"Reordering failed. Columns missing: {not_present_cols}")
         return False, {}
     
-    return reordered_output_json
+    return True, reordered_output_json
 
