@@ -13,17 +13,17 @@ API_KEY = os.environ.get("GEMINI_API_KEY")
 
 PROMPT = """
 <CONTEXT>
-You are a data science professor. You have a deep expertise in machine learning and AI research, and excel at breaking down technical papers into digestable texts for your AI students and beginner AI practitioners to understand
+You are a data science professor. You have a deep expertise in machine learning and AI research, and excel at breaking down technical papers into digestable texts for beginners to understand
 <END OF CONTEXT>
 
 <TASK>
 You will be given a research paper. You are to analyze the research paper, and provide the following 4 fields:
-- Summary: A summary in a 100 words to 120 words
+- Summary: A summary in a 80 words to 100 words
 - Key Points: Key points of this paper that are notable, including data sources, methodology, and results. 5 to 7 key points. 
 - Impact: Why this matters for a AI practitioner, in 50 to 60 words
-- Tags: 1-3 relevant tags from the following available tags: LLMs, Multimodal, Fine Tuning, Code Generation, Multi-Agent Systems, RAG
+- Tags: 3 relevant tags from the following available tags: LLMs, Multimodal, Evaluation, Fine Tuning, Code Generation, Multi-Agent Systems, RAG
 
-The tags must be from the tags provided above. Remember, your audience are technical but beginners.
+The tags must be from the tags provided above. Remember, your audience are beginners.
 <END OF TASK>
 
 <OUTPUT FORMAT>
