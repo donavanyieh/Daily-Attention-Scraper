@@ -45,7 +45,11 @@ def scrape_paper_details(title, page_link):
         soup = BeautifulSoup(res.content, "html.parser")
         
         # Parse upvotes
-        upvotes = int(soup.find_all("div", {"class": "font-semibold text-orange-500"})[0].text)
+        raw_upvotes = soup.find_all("div", {"class": "font-semibold text-orange-500"})[0].text
+        if '-' in raw_upvotes.strip():
+            upvotes = 0
+        else:
+            upvotes = int(raw_upvotes)
         
         # Parse authors
         raw_authors = soup.find_all("button", {"class":"whitespace-nowrap underline decoration-gray-300 decoration-dashed decoration-2 underline-offset-2 hover:decoration-black dark:decoration-gray-500 dark:hover:decoration-white"})
