@@ -1,0 +1,62 @@
+import os
+from dotenv import load_dotenv
+from retry import retry
+import litellm
+import pandas as pd
+import ast
+
+load_dotenv()
+API_KEY = os.environ.get("GEMINI_API_KEY")
+
+PROMPT = """
+<CONTEXT>
+You are a data science professor. You have a deep expertise in machine learning and AI research, and excel at breaking down technical papers into digestable texts for beginners to understand
+<END OF CONTEXT>
+
+<TASK>
+You will be a list of reseach papers published today. Your job is to synthesize this into a TLDR for beginners to read
+- Brief Summary: A summary in a 120 words to 150 words of all papers
+- Impact: Why this matters for a AI practitioner, in 50 to 60 words
+- Exciting Topics: 5 to 7 key points where you think this has most impact on data science. Each topic is one to two sentence long.
+
+Be clear and mindful of your audience who are beginners, and make them excited about AI
+<END OF TASK>
+
+Here is the list of research papers
+<research_df>
+
+<OUTPUT FORMAT>
+Give your answer strictly in JSON format only, in the following format:
+{"summary": <summary string>, "impact": <impact string>, "exciting topics":<list of 5 to 7 key points of exciting new things>}
+<END OF OUTPUT FORMAT>
+""".strip()
+
+@retry(tries=3, delay=15)
+def get_model_response(df, prompt = PROMPT, api_key = API_KEY):
+
+    response = litellm.completion(
+        model='gemini/gemini-2.5-flash-preview-09-2025',
+        api_key = api_key,
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt.replace("<research_df>", f"{df}")},
+                ],
+            }
+        ],
+    )
+    response_json = ast.literal_eval(response.choices[0].message.content.lstrip("```json").rstrip("```").strip())
+    return response_json
+
+def get_daily_summary(df):
+    daily_summary_json = get_model_response(df)
+    daily_summary_json_values = list(daily_summary_json.values())
+    
+    output_json = [{
+        "Summary": daily_summary_json_values[0],
+        "Impact": daily_summary_json_values[1],
+        "Exciting Topics": daily_summary_json_values[2]
+    }]
+    daily_summary_df = pd.DataFrame(output_json)
+    return daily_summary_df

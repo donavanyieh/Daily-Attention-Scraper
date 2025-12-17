@@ -3,11 +3,12 @@ import pandas as pd
 import time
 import random
 import tracemalloc
-import gc
+import os
 
-from huggingface_scraper import scrape_huggingface_workflow
-from get_genai_summaries import get_genai_analysis_json
-from save_to_gbq import save_to_gbq
+from huggingface_scraper import scrape_huggingface_workflow, get_yesterday_date
+from get_genai_analysis import get_genai_analysis_json
+from get_genai_summary import get_daily_summary
+from save_to_gbq import save_to_gbq_papers, save_to_gbq_summaries
 
 if __name__ == "__main__":
     tracemalloc.start()
@@ -28,8 +29,16 @@ if __name__ == "__main__":
             print(f"Traced memory per iteration of genai: {tracemalloc.get_traced_memory()}")
 
         scraped_df = pd.DataFrame(all_paper_details)
-        save_status = save_to_gbq(scraped_df)
-        print(f"{save_status}: {len(papers_metadata_list)} saved to GBQ")
+        save_status = save_to_gbq_papers(scraped_df, os.environ.get('GBQ_PAPERS_TABLE'))
+        print(f"{save_status}: {len(papers_metadata_list)} papers saved to GBQ Papers table")
+
+        daily_summary_df = get_daily_summary(scraped_df)
+        daily_summary_df['date'] = get_yesterday_date()
+        save_status = save_to_gbq_summaries(daily_summary_df, os.environ.get('GBQ_DAILY_SUMMARY_TABLE'))
+        print(f"{save_status}: Saved to GBQ daily summary table")
+
+
+        
 
 
     

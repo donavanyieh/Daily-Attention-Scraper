@@ -90,6 +90,7 @@ def scrape_huggingface_workflow():
     titles_and_links = scrape_papers_from_date(date_to_scrape)
     time.sleep(5 + 5*random.random())
     all_paper_metadata = []
+
     for title, link in tqdm.tqdm(titles_and_links, desc = "Scraping paper metadata"):
         paper_metadata = scrape_paper_details(title, link)
         if len(paper_metadata) == 0:

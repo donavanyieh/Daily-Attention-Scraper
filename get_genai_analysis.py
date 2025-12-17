@@ -105,15 +105,18 @@ def get_genai_analysis_json(input_json):
     
     try:
         download_status, download_path = download_pdf_simple(input_json['links']['arXiv Page'])
-    except:
-        print("Failed to download PDF")
+        pdf_base64 = pdf_to_base64(download_path)
+        file_path = Path(download_path)
+        file_path.unlink(missing_ok=True)
+    except Exception as e:
+        print(f"{e}: Failed to download PDF or delete path")
         return False, {}
     
     if not download_status:
         return False, {}
 
     try:
-        pdf_base64 = pdf_to_base64(download_path)
+        
         response_json = get_model_response(pdf_base64)
 
         output_json = input_json
@@ -126,12 +129,6 @@ def get_genai_analysis_json(input_json):
         print(f"Failed to get model response: {e}")
         return False, {}
     
-    try:
-        file_path = Path(download_path)
-        file_path.unlink(missing_ok=True)
-    except:
-        print("Failed to delete temp file")
-        return False, {}
 
     try:
         desired_order_list = ['id', 'title', 'authors', 'abstract', 'summary', 'keyPoints', 'impact', 'links', 'date', 'upvotes', 'tags']

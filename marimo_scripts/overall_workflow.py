@@ -29,6 +29,19 @@ def _():
 
 
 @app.cell
+def _():
+    output_json = [{
+    "Summary": "test text",
+        "Impact": "Test text",
+        "Exciting Topics": ["2","3"]
+    }]
+
+    import pandas as pd
+    pd.DataFrame(output_json)
+    return
+
+
+@app.cell
 def _(mo):
     mo.md(r"""
     # Part 1: Scrape Huggingface
@@ -340,9 +353,8 @@ def _(ast, download_pdf_simple, get_model_response, pdf_to_base64):
             reordered_output_json = {k: output_json[k] for k in desired_order_list}
         except:
             return False, {}
-    
-        return reordered_output_json
 
+        return reordered_output_json
     return (get_genai_analysis_json,)
 
 
