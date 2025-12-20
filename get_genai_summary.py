@@ -19,7 +19,8 @@ You will be a list of reseach papers published today. Your job is to synthesize 
 - Impact: Why this matters for a AI practitioner, in 50 to 60 words
 - Exciting Topics: 5 to 7 key points where you think this has most impact on data science. Each topic is one to two sentence long, and must reference paper title name of any claims
 
-Be clear and mindful of your audience who are beginners, and make them excited about AI
+Be clear and mindful of your audience who are beginners, and make them excited about AI.
+It is very important that you reference paper TITLES, not paper id.
 <END OF TASK>
 
 Here is the list of research papers
