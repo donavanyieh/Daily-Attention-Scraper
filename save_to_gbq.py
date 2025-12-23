@@ -52,3 +52,18 @@ def save_to_gbq_summaries(summary_df, gbq_table, gbq_dataset = GBQ_DATASET):
     except Exception as e:
         print(f"Failed to write to GBQ papers: {e}")
         return False
+    
+
+def save_full_markdown_to_gbq(markdown_df, gbq_table, gbq_dataset = GBQ_DATASET):    
+    try:
+        pandas_gbq.to_gbq(
+            markdown_df,
+            destination_table=f"{gbq_dataset}.{gbq_table}",
+            project_id=SERVICE_ACCOUNT['project_id'],
+            if_exists='append',
+            credentials = credentials
+        )
+        return True
+    except Exception as e:
+        print(f"Failed to write to GBQ markdown table: {e}")
+        return False

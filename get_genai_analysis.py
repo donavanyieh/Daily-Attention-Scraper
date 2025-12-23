@@ -7,6 +7,10 @@ import litellm
 import requests
 import ast
 from pathlib import Path
+import pymupdf.layout
+import pymupdf4llm
+import pandas as pd
+from save_to_gbq import save_full_markdown_to_gbq
 
 load_dotenv()
 API_KEY = os.environ.get("GEMINI_API_KEY")
@@ -106,6 +110,22 @@ def get_genai_analysis_json(input_json):
     try:
         download_status, download_path = download_pdf_simple(input_json['links']['arXiv Page'])
         pdf_base64 = pdf_to_base64(download_path)
+
+        # Download markdown logic
+        try:
+            with pymupdf.open(download_path) as doc:
+                md_text = pymupdf4llm.to_markdown(doc, use_ocr = False)
+            doc_id = input_json['id']
+            title = input_json['title']
+            md_json = {
+                "id": doc_id,
+                "title": title,
+                "markdown_text": md_text
+            }
+            md_df = pd.DataFrame([md_json])
+            md_save_status = save_full_markdown_to_gbq(md_df, "paper_markdowns")
+        except:
+            pass
         file_path = Path(download_path)
         file_path.unlink(missing_ok=True)
     except Exception as e:
