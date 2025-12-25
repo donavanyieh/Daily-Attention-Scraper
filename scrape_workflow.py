@@ -9,6 +9,7 @@ from huggingface_scraper import scrape_huggingface_workflow, get_yesterday_date
 from get_genai_analysis import get_genai_analysis_json
 from get_genai_summary import get_daily_summary
 from save_to_gbq import save_to_gbq_papers, save_to_gbq_summaries
+from generate_podcast import podcast_generation_workflow
 
 if __name__ == "__main__":
     tracemalloc.start()
@@ -36,6 +37,10 @@ if __name__ == "__main__":
         daily_summary_df['date'] = get_yesterday_date()
         save_status = save_to_gbq_summaries(daily_summary_df, os.environ.get('GBQ_DAILY_SUMMARY_TABLE'))
         print(f"{save_status}: Saved to GBQ daily summary table")
+        print("Generating podcast...")
+        summary_json = daily_summary_df.to_dict("records")[0]
+        podcast_save_status = podcast_generation_workflow(summary_json)
+        print(f"Podcast save status: {podcast_save_status}")
 
 
         
