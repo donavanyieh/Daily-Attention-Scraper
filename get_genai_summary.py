@@ -20,7 +20,7 @@ You will be a list of reseach papers published today. Your job is to synthesize 
 - Exciting Topics: 5 to 7 key points where you think this has most impact on data science. Each topic is one to two sentence long, and must reference paper title name of any claims, and must have no markdown formatting, e.g. no * and no #
 
 Be clear and mindful of your audience who are beginners, and make them excited about AI.
-It is very important that you reference paper TITLES, not paper id.
+It is very important that you reference paper TITLES, not paper id. Reason and think to use paper titles (typically string) instead of paper id (typically numbers with '.' in the middle). 
 <END OF TASK>
 
 Here is the list of research papers

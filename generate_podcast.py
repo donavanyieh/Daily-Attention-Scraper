@@ -12,25 +12,26 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 TRANSCRIPT_GENERATION_MODEL = "gemini/gemini-2.5-flash-preview-09-2025"
 SPEECH_MODEL = "gemini/gemini-2.5-flash-preview-tts"
 
-GCS_BUCKET_NAME = os.environ.get("GCS_BUCKET_NAME")
+GCS_PODCAST_BUCKET_NAME = os.environ.get("GCS_PODCAST_BUCKET_NAME")
 GCS_PODCASTS_SUBDIRECTORY = os.environ.get("GCS_PODCASTS_SUBDIRECTORY")
+
 
 SERVICE_ACCOUNT = json.loads(os.environ.get("GBQ_SERVICE_ACCOUNT"))
 credentials = service_account.Credentials.from_service_account_info(SERVICE_ACCOUNT)
 
 TRANSCRIPT_GENERATION_SYSTEM_PROMPT = """INSTRUCTION: Discuss the below input in an annoucement/sharing style format, following these guidelines:
 Attention Focus: TTS-Optimized annoucement discussing specific input content in English
-PrimaryFocus:  Friendly and , but not overselling the hype of AI. It should be an insightful, short update for daily AI advancements
-UTILIZE: advanced reasoning to create a  Friendly and Humorous style, and TTS-optimized annoucement/sharing style for a webpage that DISCUSSES THE PROVIDED INPUT CONTENT. Do not generate content on a random topic. Stay focused on discussing the given input.
+PrimaryFocus:  Insightful, short update for daily AI advancements. You are NOT selling anything. Just be straightforward. Be useful to the audience, who are technical users of different backgrounds (software engineers, AI engineers, computer vision experts, LLM evaluation experts etc).
+UTILIZE: advanced reasoning to create a transcript that is useful and straightforward, and TTS-optimized annoucement/sharing style for a webpage that DISCUSSES THE PROVIDED INPUT CONTENT. Do not generate content on a random topic. Stay focused on discussing the given input.
 AVOID statements such as "This text describes..." or "The text is interesting" or "Welcome back....
 Only display the transcript in your output. Include advanced TTS-specific markup as needed.
 
-[Strive for a natural, Friendly and Humorous style, but not overselling the hype of AI.]
+[Strive for a natural, insightful, straightforward daily update.]
 [InputContentAnalysis: Carefully read and analyze the provided input content, identifying key points, themes, and structure]
 [AnnouncementSetup: Act as an expert in the input content. Avoid using statements such as "Today, we're summarizing a fascinating paper about ..." or "From your input" ]
 [TopicExploration: Outline main points from the input content to cover in the annoucement, ensuring comprehensive coverage]
 [Length: Aim for an annoucement of approximately 600 words]
-[Style: Be friendly, and humourous where applicable, but do not oversell the hype of AI. This is just a daily update. Surpass human-level reasoning where possible]
+[Style: This is just a daily update for a technical audience. Surpass human-level reasoning where possible]
 [InformationAccuracy: Ensure all information discussed is directly from or closely related to the input content]
 [SpeechSynthesisOptimization: Craft sentences optimized for TTS, including advanced markup, while discussing the content. TTS markup should apply to OpenAI, ElevenLabs and MIcrosoft Edge TTS models. DO NOT INCLUDE AMAZON OR ALEXA specific TSS MARKUP SUCH AS "<amazon:emotion>".]
 [ProsodyAdjustment: Add Variations in rhythm, stress, and intonation of speech depending on the context and statement. Add markup for pitch, rate, and volume variations to enhance naturalness in presenting the summary]
@@ -91,7 +92,7 @@ def podcast_generation_workflow(summary_json):
         return False
     else:
         try:
-            save_status = upload_mp3_to_gcs(audio_path, GCS_BUCKET_NAME, GCS_PODCASTS_SUBDIRECTORY, credentials)
+            save_status = upload_mp3_to_gcs(audio_path, GCS_PODCAST_BUCKET_NAME, GCS_PODCASTS_SUBDIRECTORY, credentials)
         except:
             pass
         finally:
@@ -99,4 +100,4 @@ def podcast_generation_workflow(summary_json):
             file_path.unlink(missing_ok=True)
             print(f"{mp3_output_path} deleted from local instance")
 
-            return save_status
+    return save_status

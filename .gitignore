@@ -3,4 +3,6 @@ __**__/
 .env
 *.pdf
 *.csv
+*.png
+*.jpg
 util/

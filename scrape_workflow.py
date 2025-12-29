@@ -10,7 +10,8 @@ from get_genai_analysis import get_genai_analysis_json
 from get_genai_summary import get_daily_summary
 from save_to_gbq import save_to_gbq_papers, save_to_gbq_summaries
 from generate_podcast import podcast_generation_workflow
-
+from generate_infographic import infographic_generation_workflow
+ 
 if __name__ == "__main__":
     tracemalloc.start()
     print(f"Traced memory on start: {tracemalloc.get_traced_memory()}")
@@ -41,6 +42,9 @@ if __name__ == "__main__":
         summary_json = daily_summary_df.to_dict("records")[0]
         podcast_save_status = podcast_generation_workflow(summary_json)
         print(f"Podcast save status: {podcast_save_status}")
+        print("Generating infographic")
+        infographic_save_status = infographic_generation_workflow(summary_json)
+        print(f"Infographic save status: {infographic_save_status}")
 
 
         
