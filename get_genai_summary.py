@@ -23,12 +23,19 @@ Be clear and mindful of your audience who are beginners, and make them excited a
 It is very important that you reference paper TITLES, not paper id. Reason and think to use paper titles (typically string) instead of paper id (typically numbers with '.' in the middle). 
 <END OF TASK>
 
-Here is the list of research papers
+<IMPORTANT>
+This is STRICTLY a data summarization task. Your analysis and answer should be ONLY from the list of reseach papers information provided within this prompt.
+Think and reason beyond human capability and make sure your answer stays within the context of the research papers provided in this prompt 
+</IMPORTANT>
+
+HERE IS THE LIST OF RESEARCH PAPERS
+<research papers>
 <research_df>
+<end of research papers>
 
 <OUTPUT FORMAT>
 Give your answer strictly in JSON format only, in the following format:
-{"summary": <summary string>, "impact": <impact string>, "exciting topics":<list of 5 to 7 key points of exciting new things>}
+{"summary": <summary string>, "impact": <impact string>, "exciting topics":<list of 5 to 7 key points of exciting new things STRICTLY FROM PROVIDED LIST OF RESEARCH PAPERS>}
 <END OF OUTPUT FORMAT>
 """.strip()
 
