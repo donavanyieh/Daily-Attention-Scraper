@@ -24,8 +24,10 @@ It is very important that you reference paper TITLES, not paper id. Reason and t
 <END OF TASK>
 
 <IMPORTANT>
-This is STRICTLY a data summarization task. Your analysis and answer should be ONLY from the list of reseach papers information provided within this prompt.
-Think and reason beyond human capability and make sure your answer stays within the context of the research papers provided in this prompt 
+These 3 points are key to performing your task well:
+1. This is STRICTLY a data summarization task. Your analysis and answer should be ONLY from the list of reseach papers information provided within this prompt.
+2. When making statements, make sure you reference the paper titles appropriately. This is so the user knows which paper to explore further. REFERENCE THE PAPER TITLE, NOT THE ID.
+3. Think and reason beyond human capability and make sure your answer stays within the context of the research papers provided in this prompt
 </IMPORTANT>
 
 HERE IS THE LIST OF RESEARCH PAPERS
